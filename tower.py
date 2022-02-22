@@ -5,16 +5,14 @@ import pygame
 from game_constants import *
 from projectile import Projectile
 
-
+# TODO: Try to make a tower with splash damage.
+# TODO: Implement hit cooldown.
 class Tower(pygame.sprite.Sprite):
     def __init__(self , level ,x ,y):
         super().__init__()
         self.surf = pygame.Surface((TOWER_WIDTH , TOWER_HEIGHT))
         self.level = level
         self.range = TOWER_RANGE
-        self.hit_points = TOWER_HITPOINT[level]
-        self.targetable = []
-        self.current_target = None
         self.X = x
         self.Y = y
         self.selected = False
@@ -26,8 +24,12 @@ class Tower(pygame.sprite.Sprite):
         self.cooldown_number = 20
         self.lives = 10
         self.angle = 0
+        self.base_img = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70)).convert_alpha()
+        self.base_rect = self.base_img.get_rect()
+        self.base_rect.center = (self.X + (self.image.get_width() / 2) , self.Y + (self.image.get_height() / 2))
 
     def draw(self , display):
+        display.blit(self.base_img , self.base_rect)
         display.blit(self.image , self.rect)
 
         
@@ -68,7 +70,7 @@ class Tower(pygame.sprite.Sprite):
             # self.rotate(angle_change)
 
             if self.cooldown_tracker == 0:
-                P1 = Projectile(enemy , self.hit_points , self.range , self)
+                P1 = Projectile(enemy , TOWER_HITPOINT[self.level] , self.range , self)
                 projectiles.add(P1)
         else:
             if self.cooldown_tracker < self.cooldown_number:
@@ -107,4 +109,18 @@ class Tower(pygame.sprite.Sprite):
     #     # draw rectangle around the image
     #     pygame.draw.rect(surf, (255, 0, 0), (*rotated_image_rect.topleft, *rotated_image.get_size()),2)
 
-        
+    def level_up(self):
+        if self.level <= 1:
+            self.level += 1
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.X , self.Y)
+            return True
+        else:
+            return False
+
+    def level_up_cost(self):
+        # TODO: Make update possible
+        if self.level <= 1:
+            return TOWER_HITPOINT[self.level + 1]
+        else:
+            return 0

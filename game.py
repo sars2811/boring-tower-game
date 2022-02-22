@@ -5,6 +5,7 @@ import pygame
 from ENEMIES.alien import Alien
 from ENEMIES.ogre import Ogre
 from ENEMIES.sword import Sword
+from TOWERS.mg import Mg
 from game_constants import *
 from tower import Tower
 
@@ -17,7 +18,6 @@ class Game:
         self.dead_enemy_list = pygame.sprite.Group()
         self.attack_tower_list = pygame.sprite.Group()
         self.projectile_list = pygame.sprite.Group()
-        self.all_sprites = pygame.sprite.Group()
         self.lives = LIVES
         self.money = MONEY
         self.timer = time.time()
@@ -29,7 +29,7 @@ class Game:
         self.run_bool = True
         self.score = 0
         self.display.fill(BLACK)
-        T1 = Tower(0 , (WIN_WIDTH / 2) , (WIN_HEIGHT / 2))
+        T1 = Mg(0 , (WIN_WIDTH / 2) , (WIN_HEIGHT / 2))
         self.attack_tower_list.add(T1)
 
         # self.pause = True

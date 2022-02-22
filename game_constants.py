@@ -21,7 +21,8 @@ LIVES = 10
 MONEY = 2000
 
 #TOWER INFO
-TOWER_HITPOINT = (40 , 70 , 100) #TODO: Change accorfing to the tower and stuff.
+TOWER_HITPOINT = (40 , 50 , 60) #TODO: Change accorfing to the tower and stuff.
+TOWER_COOLDOWN = (20 , 17 , 15)
 TOWER_RANGE = 200
 ARROW_SPEED = 15
 TOWER_HEIGHT = 64
