@@ -2,7 +2,9 @@ import os
 import sys
 import time
 import pygame
-from enemy import Enemy
+from ENEMIES.alien import Alien
+from ENEMIES.ogre import Ogre
+from ENEMIES.sword import Sword
 from game_constants import *
 from tower import Tower
 
@@ -11,7 +13,8 @@ FramePerSec = pygame.time.Clock()
 class Game:
     def __init__(self, display):
         self.display = display
-        self.enemy_list = pygame.sprite.Group()
+        self.alive_enemy_list = pygame.sprite.Group()
+        self.dead_enemy_list = pygame.sprite.Group()
         self.attack_tower_list = pygame.sprite.Group()
         self.projectile_list = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
@@ -33,9 +36,9 @@ class Game:
 
     def gen_enemies(self):
         #TODO: DO BETTER ENEMY GENERATION.
-        if len(self.enemy_list) == 0:
-            E1 = Enemy(0)
-            self.enemy_list.add(E1)
+        if len(self.alive_enemy_list) == 0:
+            E1 = Alien()
+            self.alive_enemy_list.add(E1)
 
 
     def display_text(self, text , pos_x , pos_y):
@@ -62,9 +65,10 @@ class Game:
         self.display.blit(self.bg , (0,0))
         self.display_hud()
 
-        
+        for enemy in self.dead_enemy_list:
+            enemy.draw_dead(self.display)
 
-        for enemy in self.enemy_list:
+        for enemy in self.alive_enemy_list:
             enemy.draw(self.display)
             enemy.draw_health_bar(self.display)
 
@@ -81,7 +85,7 @@ class Game:
 
     def update(self):
 
-        for enemy in self.enemy_list:
+        for enemy in self.alive_enemy_list:
             enemy.move()
             
             #Implementing if the enemy has crossed into the castle.
@@ -92,19 +96,23 @@ class Game:
                 enemy.kill()
 
         for tower in self.attack_tower_list:
-            tower.shoot(self.enemy_list , self.projectile_list)
+            tower.shoot(self.alive_enemy_list , self.projectile_list)
             
         for projectile in self.projectile_list:
             projectile.update()
 
-        for t in pygame.sprite.groupcollide(self.enemy_list , self.projectile_list , False ,False).items():
+        for t in pygame.sprite.groupcollide(self.alive_enemy_list , self.projectile_list , False ,False).items():
             for a in t[1]:
                 killed = t[0].hit(a.damage)
                 if killed:
                     self.score += 10
+                    self.alive_enemy_list.remove(t[0])
+                    self.dead_enemy_list.add(t[0])
+                
                 a.kill()
+                
 
-        for collide in  pygame.sprite.groupcollide(self.attack_tower_list , self.enemy_list , False ,False).items():
+        for collide in  pygame.sprite.groupcollide(self.attack_tower_list , self.alive_enemy_list , False ,False).items():
             for x in collide[1]:
                 collide[0].hit()
 
