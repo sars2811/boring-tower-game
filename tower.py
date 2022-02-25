@@ -1,4 +1,3 @@
-import math
 import os
 import pygame
 
@@ -43,7 +42,9 @@ class Tower(pygame.sprite.Sprite):
         self.X = x
         self.Y = y
 
+        #Update the position of images.
         self.rect.center = (self.X , self.Y)
+        self.base_rect.center = (self.X + BASE_IMAGE_DISP[self.level][0] , self.Y + 16)
 
     def cooldown(self):
         if self.cooldown_tracker >= self.cooldown_number:

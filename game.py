@@ -7,7 +7,7 @@ from ENEMIES.ogre import Ogre
 from ENEMIES.sword import Sword
 from TOWERS.mg import Mg
 from game_constants import *
-from tower import Tower
+from menu import Menu
 
 FramePerSec = pygame.time.Clock()
 
@@ -18,6 +18,10 @@ class Game:
         self.dead_enemy_list = pygame.sprite.Group()
         self.attack_tower_list = pygame.sprite.Group()
         self.projectile_list = pygame.sprite.Group()
+        # game_constants.BASE_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70)).convert_alpha()
+        # game_constants.TOWER_IMAGES = [pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG.png")) , (35 , 35 * 229 / 110)).convert_alpha(),
+        #         pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG2.png")) , (60 , 60 * 239 / 218)).convert_alpha(),
+        #         pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG3.png")) , (50 , 50 * 259 / 166)).convert_alpha(),]
         self.lives = LIVES
         self.money = MONEY
         self.timer = time.time()
@@ -28,9 +32,10 @@ class Game:
         self.bg = pygame.image.load(os.path.join("Assets/Pictures" , "bg-hd.png")).convert_alpha()
         self.run_bool = True
         self.score = 0
-        self.display.fill(BLACK)
+        self.display.fill(GREY)
         T1 = Mg(0 , (WIN_WIDTH / 2) , (WIN_HEIGHT / 2))
         self.attack_tower_list.add(T1)
+        self.menu = Menu()
 
         # self.pause = True
 
@@ -45,25 +50,26 @@ class Game:
         text_surface = self.font.render(text , True , BLACK)
         self.display.blit(text_surface , (pos_x , pos_y))
 
-    #TODO: Change the position of HUD and also decrease that in size.
     def display_hud(self):
-        #Drawing the Outer Rectangles   
-        pygame.draw.rect(self.display , GREY , (30 , 30 , 400 , 100))
-        pygame.draw.rect(self.display , WHITE , (30 , 30 , 400 , 100) , 3)
+
+        #Displaying the score
+        self.display_text(str(self.score) , 980 , 30)
 
         #Displaying Money Info
-        pygame.draw.rect(self.display , YELLOW , (50 , 50 , 60 , 60))
-        self.display_text(str(self.money) , 115 , 60)
+        pygame.draw.rect(self.display , YELLOW , (980 , 90 , 30 , 30))
+        self.display_text(str(self.money) , 1020 , 75)
 
         #Displaying Lives
-        pygame.draw.rect(self.display , RED , (250 , 50 , 60 , 60))
-        self.display_text(str(self.lives) , 315 , 60)
+        pygame.draw.rect(self.display , RED , (980 , 140 , 30 , 30))
+        self.display_text(str(self.lives) , 1020 , 125)
 
     def draw(self):
 
         #This function takes care of drawing everything
+        self.display.fill(GREY)
         self.display.blit(self.bg , (0,0))
         self.display_hud()
+        self.menu.draw(self.display)
 
         for enemy in self.dead_enemy_list:
             enemy.draw_dead(self.display)
@@ -80,6 +86,10 @@ class Game:
 
         for projectile in self.projectile_list:
             projectile.draw(self.display)
+
+        if self.placing_tower:
+            self.placing_tower.draw(self.display)
+            self.placing_tower.draw_range(self.display)
 
         pygame.display.update()
 
@@ -120,8 +130,6 @@ class Game:
     def game_end(self):
         #TODO: MAKE AND DIRECT TO THE GAME END SCREEN.
         self.run_bool = False
-
-        
                 
     def run(self):
         
@@ -136,6 +144,8 @@ class Game:
             #For tower that is selected and yet not placed.
             if self.placing_tower:
                 self.placing_tower.move(mos_pos[0] , mos_pos[1])
+            else:
+                self.menu.check_hovered(mos_pos)
 
                 #TODO: CHECK IF INTERSECTING WITH ANOTHER TOWER AND REACT ACCORDINGLY
 
@@ -153,6 +163,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if self.selected_tower:
+                        #TODO: Check for upgrade option.
                         self.selected_tower = None
                     
                     mos_pos = pygame.mouse.get_pos()
@@ -165,6 +176,10 @@ class Game:
                         if tower.rect.collidepoint(mos_pos):
                             self.selected_tower = tower
 
+                    # Checking if the menu got clicked.
+                    tower_clicked = self.menu.check_clicked(mos_pos)
+                    if tower_clicked != None:
+                        self.placing_tower = tower_clicked
             
 
             #SEE IF MOVING SOMETHING

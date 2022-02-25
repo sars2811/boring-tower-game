@@ -2,7 +2,7 @@ import sys
 import pygame
 from game import Game
 
-from game_constants import BLACK, L_BROWN, RED, WHITE, WIN_HEIGHT, WIN_WIDTH
+from game_constants import *
 
 start_font = pygame.font.Font(None, 30)
 start_text = start_font.render("Start!" , True , RED)

@@ -1,7 +1,7 @@
 import math
 import pygame
 
-from game_constants import ARROW_SPEED, RED
+from game_constants import *
 
 
 class Projectile(pygame.sprite.Sprite):

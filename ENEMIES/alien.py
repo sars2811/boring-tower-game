@@ -1,7 +1,6 @@
 import os
 import pygame
 from enemy import Enemy
-from game_constants import MONSTER_HEALTH
 
 walk_imgs = []
 die_imgs = []
