@@ -15,7 +15,6 @@ class MenuButton:
         self.rect = self.image.get_rect()
         self.level = level
         self.rect.center = (x , y)
-        self.entity = Mg(level , x , y)
         self.hover = False
         self.base_image = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70)).convert_alpha()
         self.image_rect = Tower_images[self.level].get_rect()
@@ -25,7 +24,7 @@ class MenuButton:
 
     def clicked(self , mos_pos):
         if self.rect.collidepoint(mos_pos):
-            return self.entity
+            return Mg(self.level , self.rect.centerx , self.rect.centery)
         else:
             return None
 

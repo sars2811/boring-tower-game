@@ -65,7 +65,6 @@ class Enemy(pygame.sprite.Sprite):
 
         if(dirn[0] > 0 and self.flipped):
             self.flipped = False
-            print("FLIPPED IT IS")
             for x, img in enumerate(self.walk_imgs):
                 self.walk_imgs[x] = pygame.transform.flip(img, True, False)
             for x, img in enumerate(self.die_imgs):

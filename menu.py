@@ -19,7 +19,6 @@ class Menu:
         for button in self.menu_buttons:
             entity = button.clicked(mos_pos)
             if entity != None:
-                print("A BUTTON WAS CLICKED")
                 return entity
             
         return None

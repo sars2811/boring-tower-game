@@ -33,8 +33,6 @@ class Game:
         self.run_bool = True
         self.score = 0
         self.display.fill(GREY)
-        T1 = Mg(0 , (WIN_WIDTH / 2) , (WIN_HEIGHT / 2))
-        self.attack_tower_list.add(T1)
         self.menu = Menu()
 
         # self.pause = True
@@ -166,10 +164,23 @@ class Game:
                         #TODO: Check for upgrade option.
                         self.selected_tower = None
                     
-                    mos_pos = pygame.mouse.get_pos()
                     # TODO: Complete this and enable placing tower
-                    if self.placing_tower:
+                    if self.placing_tower != None:
                         not_allowed = False
+
+                        for tower in self.attack_tower_list:
+                            if self.placing_tower.base_rect.colliderect(tower.base_rect):
+                                #TODO: Chnage the color of something to show tat there was intersection.
+                                not_allowed = True
+                                pass
+
+                        if not not_allowed:
+                            if self.money >= TOWER_COST[self.placing_tower.level]:
+                                self.attack_tower_list.add(self.placing_tower)
+                                self.money -= TOWER_COST[self.placing_tower.level]
+                                self.placing_tower = None
+                            else:
+                                self.placing_tower = None
 
                     # Checking if a tower was clicked.
                     for tower in self.attack_tower_list:
