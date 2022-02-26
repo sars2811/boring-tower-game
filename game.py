@@ -116,9 +116,10 @@ class Game:
 
         for t in pygame.sprite.groupcollide(self.alive_enemy_list , self.projectile_list , False ,False).items():
             for a in t[1]:
-                killed = t[0].hit(a.damage)
+                killed , enemy_level = t[0].hit(a.damage)
                 if killed:
-                    self.score += 10
+                    self.score += MONSTER_SCORE[enemy_level]
+                    self.money += MONSTER_MONEY[enemy_level]
                     self.alive_enemy_list.remove(t[0])
                     self.dead_enemy_list.add(t[0])
                 

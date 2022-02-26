@@ -101,9 +101,9 @@ class Enemy(pygame.sprite.Sprite):
         self.health -= damage
 
         if self.health <= 0:
-            return True
+            return (True , self.level)
         else:
-            return False
+            return (False , 0)
 
     def speed_increase(self):
         self.speed += SPEED_INCREASE
