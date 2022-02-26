@@ -51,16 +51,8 @@ BUTTONS = []
 MENU_X = 1000
 MENU_Y = 300
 
+#OTHER STUFF
+MAX_VIBRATE_COUNT = 15
+MONEY_Y = 75
+VIBRATE_DISP = 5
 #TODO: MAKE MULTIPLE HIGHSCORES THINGY.
-
-
-# def init():
-#     BUTTONS.append(MenuButton(BUTTON_X , 200 , 0))
-#     BUTTONS.append(MenuButton(BUTTON_X , 350 , 1))
-#     BUTTONS.append(MenuButton(BUTTON_X , 500 , 2))
-
-#     TOWER_IMAGES.append(pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG.png")) , (35 , 35 * 229 / 110)).convert_alpha())
-#     TOWER_IMAGES.append(pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG2.png")) , (60 , 60 * 239 / 218)).convert_alpha())
-#     TOWER_IMAGES.append(pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG3.png")) , (50 , 50 * 259 / 166)).convert_alpha())
-
-#     # BASE_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70)).convert_alpha()

@@ -34,6 +34,9 @@ class Game:
         self.score = 0
         self.display.fill(GREY)
         self.menu = Menu()
+        self.vibrate_money = False
+        self.vibrate_count = 0
+        self.vibrate_disp = 0
 
         # self.pause = True
 
@@ -43,23 +46,25 @@ class Game:
             E1 = Alien()
             self.alive_enemy_list.add(E1)
 
-
-    def display_text(self, text , pos_x , pos_y):
-        text_surface = self.font.render(text , True , BLACK)
+    def display_text(self, text , pos_x , pos_y , color):
+        text_surface = self.font.render(text , True , color)
         self.display.blit(text_surface , (pos_x , pos_y))
 
     def display_hud(self):
 
         #Displaying the score
-        self.display_text(str(self.score) , 980 , 30)
+        self.display_text(str(self.score) , 980 , 30 , BLACK)
 
         #Displaying Money Info
         pygame.draw.rect(self.display , YELLOW , (980 , 90 , 30 , 30))
-        self.display_text(str(self.money) , 1020 , 75)
+        if self.vibrate_money:
+            self.display_text(str(self.money) , 1020 , MONEY_Y + self.vibrate_disp , RED)
+        else:
+            self.display_text(str(self.money) , 1020 , MONEY_Y , BLACK)
 
         #Displaying Lives
         pygame.draw.rect(self.display , RED , (980 , 140 , 30 , 30))
-        self.display_text(str(self.lives) , 1020 , 125)
+        self.display_text(str(self.lives) , 1020 , 125 , BLACK)
 
     def draw(self):
 
@@ -124,6 +129,16 @@ class Game:
             for x in collide[1]:
                 collide[0].hit()
 
+        if self.vibrate_money:
+            if self.vibrate_count >= MAX_VIBRATE_COUNT:
+                self.vibrate_money = False
+                self.vibrate_count = 0
+                self.vibrate_disp = 0
+            else:
+                multiplier = (self.vibrate_count % 3) - 1
+                self.vibrate_disp = VIBRATE_DISP * multiplier
+                self.vibrate_count += 1
+
 
     def game_end(self):
         #TODO: MAKE AND DIRECT TO THE GAME END SCREEN.
@@ -180,6 +195,7 @@ class Game:
                                 self.money -= TOWER_COST[self.placing_tower.level]
                                 self.placing_tower = None
                             else:
+                                self.vibrate_money = True
                                 self.placing_tower = None
 
                     # Checking if a tower was clicked.
