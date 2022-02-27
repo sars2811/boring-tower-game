@@ -7,8 +7,29 @@ from ENEMIES.ogre import Ogre
 from ENEMIES.sword import Sword
 from game_constants import *
 from menu import Menu
+import shelve
 
 FramePerSec = pygame.time.Clock()
+
+file = shelve.open(FILE_NAME)
+
+flag1 = HIGH_SCORE_NAME in file
+flag2 = HIGH_NAME in file
+
+high_score = 0
+high_name = "Anonymous"
+
+if flag1:
+    high_score = file[HIGH_SCORE_NAME]
+else:
+    file[HIGH_SCORE_NAME] = 0
+
+if flag2:
+    high_name = file[HIGH_NAME]
+else:
+    file[HIGH_NAME] = "Anonymous"
+
+file.close()
 
 class Game:
     def __init__(self, display , name):
@@ -73,7 +94,7 @@ class Game:
         self.display_text(str(self.lives) , 1020 , 125 , BLACK)
 
     def display_HS(self):
-        self.display_text("High Score: 1000 by Anonymous." , 200 , 50 , BLACK)
+        self.display_text(f"High Score: {high_score} by {high_name}" , 200 , 50 , BLACK)
 
     def draw(self):
 
@@ -180,8 +201,10 @@ class Game:
     def check_HS(self):
 
         #TODO: change it to actually store the data
-        if self.score > HIGH_SCORE:
-            HIGH_SCORE = self.score
+        if self.score > high_score:
+            file = shelve.open(FILE_NAME)
+            file[HIGH_SCORE_NAME] = self.score
+            file[HIGH_NAME] = self.name
 
     def game_end(self):
         #TODO: MAKE AND DIRECT TO THE GAME END SCREEN.
@@ -267,5 +290,8 @@ class Game:
         
             FramePerSec.tick(FPS)
 
+
+        self.check_HS()
+        
         pygame.quit()
         sys.exit()

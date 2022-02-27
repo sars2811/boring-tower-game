@@ -72,4 +72,6 @@ MENU_Y = 300
 MAX_VIBRATE_COUNT = 15
 MONEY_Y = 75
 VIBRATE_DISP = 5
-
+FILE_NAME = "high_score.txt"
+HIGH_SCORE_NAME = "high_score"
+HIGH_NAME = "name"
