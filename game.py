@@ -122,16 +122,30 @@ class Game:
         for projectile in self.projectile_list:
             projectile.update()
 
-        for t in pygame.sprite.groupcollide(self.alive_enemy_list , self.projectile_list , False ,False).items():
-            for a in t[1]:
-                killed , enemy_level = t[0].hit(a.damage)
+        for t in pygame.sprite.groupcollide(self.projectile_list, self.alive_enemy_list, False ,False).items():
+            enemy_hit = t[1][0]
+
+            if enemy_hit:
+                killed , enemy_level = enemy_hit.hit(t[0].damage)
+
                 if killed:
                     self.score += MONSTER_SCORE[enemy_level]
                     self.money += MONSTER_MONEY[enemy_level]
-                    self.alive_enemy_list.remove(t[0])
-                    self.dead_enemy_list.add(t[0])
+                    self.alive_enemy_list.remove(enemy_hit)
+                    self.dead_enemy_list.add(enemy_hit)
+
+                t[0].kill()
+
+            # Here if bullet hit multiple enemies, all registered the hit
+            # for a in t[1]:
+            #     killed , enemy_level = t[0].hit(a.damage)
+            #     if killed:
+            #         self.score += MONSTER_SCORE[enemy_level]
+            #         self.money += MONSTER_MONEY[enemy_level]
+            #         self.alive_enemy_list.remove(t[0])
+            #         self.dead_enemy_list.add(t[0])
                 
-                a.kill()
+            #     a.kill()
                 
 
         for collide in  pygame.sprite.groupcollide(self.attack_tower_list , self.alive_enemy_list , False ,False).items():
