@@ -94,7 +94,7 @@ class Game:
         self.display_text(str(self.lives) , 1020 , 125 , BLACK)
 
     def display_HS(self):
-        self.display_text(f"High Score: {high_score} by {high_name}" , 200 , 50 , BLACK)
+        self.display_text(f"High Score: {high_score} by {high_name}" , 200 , 0 , BLACK)
 
     def draw(self):
 
