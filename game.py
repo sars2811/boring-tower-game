@@ -151,10 +151,8 @@ class Game:
         if sum(self.current_wave) == 0:
             if len(self.alive_enemy_list) == 0:
                 if self.time_n_wave > 0:
-                    print("Timer decreased")
                     self.time_n_wave -= 1
                 elif self.wave_n <= (len(WAVES) - 2) and self.time_n_wave <= 0:
-                    print("Wave changed")
                     self.wave_n += 1
                     self.time_n_wave = 120
                     self.current_wave = WAVES[self.wave_n]
