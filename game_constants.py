@@ -29,7 +29,6 @@ TOWER_HEIGHT = 64
 TOWER_WIDTH = 30
 TOWER_COST = (500 , 1000 , 1500)
 # BASE_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70))
-TOWER_IMAGES = []
 BASE_IMAGE_DISP = [(6,16) , (0 , 16) , (7,16)]
 
 #MONSTER INFO
@@ -41,6 +40,22 @@ SPEED_INCREASE = 1
 PICTURE_NUMBER = 20
 MONSTER_SCORE = (10 , 15 , 20)
 MONSTER_MONEY = (10 , 15 , 20)
+#(Alien , Ogre , Sword )
+WAVES = [
+    [20, 0, 0],
+    [40, 0, 0],
+    [80, 0, 0],
+    [20, 20, 0],
+    [50, 30, 0, ],
+    [70, 50, 0],
+    [20, 100, 0],
+    [50, 100, 0],
+    [80, 100, 0],
+    [20, 20, 50],
+    [40, 40, 100],
+    [20, 20, 150],
+    [200, 100, 200],
+]
 
 #BUTTON INFO
 BUTTON_WIDTH = 125

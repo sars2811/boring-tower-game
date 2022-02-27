@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 import time
 import pygame
@@ -18,15 +19,9 @@ class Game:
         self.dead_enemy_list = pygame.sprite.Group()
         self.attack_tower_list = pygame.sprite.Group()
         self.projectile_list = pygame.sprite.Group()
-        # game_constants.BASE_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "tower.png")) , (70 , 70)).convert_alpha()
-        # game_constants.TOWER_IMAGES = [pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG.png")) , (35 , 35 * 229 / 110)).convert_alpha(),
-        #         pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG2.png")) , (60 , 60 * 239 / 218)).convert_alpha(),
-        #         pygame.transform.scale(pygame.image.load(os.path.join("Assets/Pictures/TOWERS" , "MG3.png")) , (50 , 50 * 259 / 166)).convert_alpha(),]
         self.lives = LIVES
         self.money = MONEY
-        self.timer = time.time()
         self.font = pygame.font.SysFont("comicsans" , 40)
-        self.wave = 0
         self.selected_tower = None
         self.placing_tower = None
         self.bg = pygame.image.load(os.path.join("Assets/Pictures" , "bg-hd.png")).convert_alpha()
@@ -34,17 +29,30 @@ class Game:
         self.score = 0
         self.display.fill(GREY)
         self.menu = Menu()
+
         self.vibrate_money = False
         self.vibrate_count = 0
         self.vibrate_disp = 0
+        
+        self.wave_n = 0
+        self.time_n_wave = 120
+        self.current_wave = WAVES[self.wave_n]
+
+        self.last_spawn = pygame.time.get_ticks()
 
         # self.pause = True
 
     def gen_enemies(self):
-        #TODO: DO BETTER ENEMY GENERATION.
-        if len(self.alive_enemy_list) == 0:
-            E1 = Alien()
-            self.alive_enemy_list.add(E1)
+        #TODO: MAYBE ADD A TIMER FOR SOMEWHAT RANDOM SPAWNING
+        if sum(self.current_wave) != 0:
+            wave_enemies = [Alien() , Ogre() , Sword()]
+            not_found = True
+            while not_found:
+                x = random.randint(0 , len(self.current_wave) - 1)
+                if self.current_wave[x] != 0:
+                    self.alive_enemy_list.add(wave_enemies[x])
+                    self.current_wave[x] -= 1
+                    not_found = False
 
     def display_text(self, text , pos_x , pos_y , color):
         text_surface = self.font.render(text , True , color)
@@ -140,6 +148,19 @@ class Game:
                 self.vibrate_disp = VIBRATE_DISP * multiplier
                 self.vibrate_count += 1
 
+        if sum(self.current_wave) == 0:
+            if len(self.alive_enemy_list) == 0:
+                if self.time_n_wave > 0:
+                    print("Timer decreased")
+                    self.time_n_wave -= 1
+                elif self.wave_n <= (len(WAVES) - 2) and self.time_n_wave <= 0:
+                    print("Wave changed")
+                    self.wave_n += 1
+                    self.time_n_wave = 120
+                    self.current_wave = WAVES[self.wave_n]
+                else:
+                    print("Game ended")
+                    self.run_bool = False
 
     def game_end(self):
         #TODO: MAKE AND DIRECT TO THE GAME END SCREEN.
@@ -151,7 +172,11 @@ class Game:
             self.update()
             self.draw()
 
-            self.gen_enemies()
+            now = pygame.time.get_ticks()
+            if now - self.last_spawn >= random.randint(300 , 500):
+                self.last_spawn = now
+                self.gen_enemies()
+
 
             mos_pos = pygame.mouse.get_pos()
 
@@ -172,7 +197,7 @@ class Game:
                         self.run_bool = False
 
                     if event.key == pygame.K_n:
-                        self.waves += 1
+                        self.time_n_wave = 0
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 

@@ -25,7 +25,7 @@ for x in range(20):
 class Sword(Enemy):
     def __init__(self):
         super().__init__()
-        self.level = 1
+        self.level = 2
         self.health = MONSTER_HEALTH[self.level] 
         self.walk_imgs = walk_imgs
         self.die_imgs  = die_imgs
