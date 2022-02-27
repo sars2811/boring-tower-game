@@ -30,6 +30,8 @@ start_text_rect.center = ((WIN_WIDTH / 2) , (WIN_HEIGHT / 2 + 30))
 
 frames = pygame.time.Clock()
 
+pygame.mixer.music.load('Assets\Music\8bitDungeonLevel.mp3')
+
 
 class StartMenu:
     def __init__(self , display):
@@ -38,8 +40,10 @@ class StartMenu:
 
     def run(self):
         run = True
+        pygame.mixer.music.play(-1)
 
-        while run: 
+
+        while run:     
 
             self.draw()
 
