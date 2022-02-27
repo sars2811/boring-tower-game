@@ -1,19 +1,17 @@
 import os
 import random
 import sys
-import time
 import pygame
 from ENEMIES.alien import Alien
 from ENEMIES.ogre import Ogre
 from ENEMIES.sword import Sword
-from TOWERS.mg import Mg
 from game_constants import *
 from menu import Menu
 
 FramePerSec = pygame.time.Clock()
 
 class Game:
-    def __init__(self, display):
+    def __init__(self, display , name):
         self.display = display
         self.alive_enemy_list = pygame.sprite.Group()
         self.dead_enemy_list = pygame.sprite.Group()
@@ -39,6 +37,8 @@ class Game:
         self.current_wave = WAVES[self.wave_n]
 
         self.last_spawn = pygame.time.get_ticks()
+
+        self.name = name
 
     def gen_enemies(self):
         #TODO: MAYBE ADD A TIMER FOR SOMEWHAT RANDOM SPAWNING
@@ -72,12 +72,16 @@ class Game:
         pygame.draw.rect(self.display , RED , (980 , 140 , 30 , 30))
         self.display_text(str(self.lives) , 1020 , 125 , BLACK)
 
+    def display_HS(self):
+        self.display_text("High Score: 1000 by Anonymous." , 200 , 50 , BLACK)
+
     def draw(self):
 
         #This function takes care of drawing everything
         self.display.fill(GREY)
         self.display.blit(self.bg , (0,0))
         self.display_hud()
+        self.display_HS()
         self.menu.draw(self.display)
 
         for enemy in self.dead_enemy_list:
@@ -171,6 +175,13 @@ class Game:
                 else:
                     print("Game ended")
                     self.run_bool = False
+
+
+    def check_HS(self):
+
+        #TODO: change it to actually store the data
+        if self.score > HIGH_SCORE:
+            HIGH_SCORE = self.score
 
     def game_end(self):
         #TODO: MAKE AND DIRECT TO THE GAME END SCREEN.
