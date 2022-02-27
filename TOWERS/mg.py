@@ -15,3 +15,14 @@ class Mg(Tower):
         self.rect.center = (self.X , self.Y)
         self.base_rect.center = (self.X + BASE_IMAGE_DISP[level][0] , self.Y + 16)
 
+    def level_up(self , money):
+        cost = self.level_up_cost()
+        if self.level <= 1 and money >= cost:
+            self.level += 1
+            self.image = Tower_images[self.level]
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.X , self.Y)
+            self.base_rect.center = (self.X + BASE_IMAGE_DISP[self.level][0] , self.Y + 16)
+            return (True , cost)
+        else:
+            return (False , 0)

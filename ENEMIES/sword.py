@@ -27,8 +27,8 @@ class Sword(Enemy):
         super().__init__()
         self.level = 2
         self.health = MONSTER_HEALTH[self.level] 
-        self.walk_imgs = walk_imgs
-        self.die_imgs  = die_imgs
+        self.walk_imgs = walk_imgs.copy()
+        self.die_imgs  = die_imgs.copy()
         self.rect = self.walk_imgs[0].get_rect()
         self.rect.center = (self.X , self.Y)
 

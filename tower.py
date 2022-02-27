@@ -27,6 +27,13 @@ class Tower(pygame.sprite.Sprite):
         self.base_rect = self.base_img.get_rect()
         self.base_rect.center = (self.X + (self.image.get_width() / 2) , self.Y + (self.image.get_height() / 2))
 
+        self.upgrade_text = pygame.font.SysFont('comicsans' , 20).render("Upgrade!" , True , RED)
+        self.upgrade_text_rect = self.upgrade_text.get_rect()
+        self.upgrade_text_rect.midtop = self.base_rect.midbottom
+        self.upgradable = (self.level <= 1)
+
+        print(self.base_rect.center)
+
     def draw(self , display):
         display.blit(self.base_img , self.base_rect)
         display.blit(self.image , self.rect)
@@ -35,8 +42,10 @@ class Tower(pygame.sprite.Sprite):
     def draw_range(self, display):
         surface = pygame.Surface((self.range * 4, self.range * 4), pygame.SRCALPHA, 32)
         pygame.draw.circle(surface, (128, 128, 128, 100), (self.range, self.range ), self.range, 0)
-
         display.blit(surface, (self.X - self.range, self.Y - self.range))
+
+        if self.upgradable:
+            display.blit(self.upgrade_text , self.upgrade_text_rect)
         
     def move(self , x , y):
         self.X = x
@@ -45,6 +54,7 @@ class Tower(pygame.sprite.Sprite):
         #Update the position of images.
         self.rect.center = (self.X , self.Y)
         self.base_rect.center = (self.X + BASE_IMAGE_DISP[self.level][0] , self.Y + 16)
+        self.upgrade_text_rect.midtop = self.base_rect.midbottom
 
     def cooldown(self):
         if self.cooldown_tracker >= self.cooldown_number:
@@ -110,18 +120,9 @@ class Tower(pygame.sprite.Sprite):
     #     # draw rectangle around the image
     #     pygame.draw.rect(surf, (255, 0, 0), (*rotated_image_rect.topleft, *rotated_image.get_size()),2)
 
-    def level_up(self):
-        if self.level <= 1:
-            self.level += 1
-            self.rect = self.image.get_rect()
-            self.rect.center = (self.X , self.Y)
-            return True
-        else:
-            return False
-
     def level_up_cost(self):
         # TODO: Make update possible
         if self.level <= 1:
-            return TOWER_HITPOINT[self.level + 1]
+            return (TOWER_COST[self.level + 1] - TOWER_COST[self.level] + 200 )
         else:
             return 0

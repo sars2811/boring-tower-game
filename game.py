@@ -40,8 +40,6 @@ class Game:
 
         self.last_spawn = pygame.time.get_ticks()
 
-        # self.pause = True
-
     def gen_enemies(self):
         #TODO: MAYBE ADD A TIMER FOR SOMEWHAT RANDOM SPAWNING
         if sum(self.current_wave) != 0:
@@ -214,8 +212,15 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if self.selected_tower:
-                        #TODO: Check for upgrade option.
-                        self.selected_tower = None
+                        if self.selected_tower.upgrade_text_rect.collidepoint(mos_pos) and self.selected_tower.upgradable:
+                            upgraded , cost = self.selected_tower.level_up(self.money)
+
+                            if not upgraded:
+                                self.vibrate_money = True
+                            else:
+                                self.money -= cost
+
+                        else: self.selected_tower = None
                     
                     # TODO: Complete this and enable placing tower
                     if self.placing_tower != None:
@@ -238,7 +243,7 @@ class Game:
 
                     # Checking if a tower was clicked.
                     for tower in self.attack_tower_list:
-                        if tower.rect.collidepoint(mos_pos):
+                        if tower.rect.collidepoint(mos_pos) or tower.base_rect.collidepoint(mos_pos):
                             self.selected_tower = tower
 
                     # Checking if the menu got clicked.
